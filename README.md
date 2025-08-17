@@ -2,7 +2,7 @@
 
 Livingdex è un'applicazione Flutter che utilizza **Gemini 2.0 Flash** per simulare un Pokédex nella vita reale, dedicata all'identificazione di piante e animali.
 
-| <img width="391" height="376" alt="icona_livingdex" src="https://github.com/user-attachments/assets/188e5869-94bd-4a71-989c-a17d21e2a4d1" />| ![splashdefinitivo](https://github.com/user-attachments/assets/39a7e358-e7dc-47f0-a434-8f31942f9beb)| ![nigga](https://github.com/user-attachments/assets/5965befa-045b-4c6c-b8b7-2324715f01a0)|
+| <img width="391" height="376" alt="icona_livingdex" src="https://github.com/user-attachments/assets/188e5869-94bd-4a71-989c-a17d21e2a4d1" />| ![splashdefinitivo](https://github.com/user-attachments/assets/39a7e358-e7dc-47f0-a434-8f31942f9beb)| ![nigga](https://github.com/user-attachments/assets/224c9752-cf03-4fb5-8ea9-d04865192734)|
 |:--:|:--:|:--:|
 | **Icona Applicazione** | **Splash Screen** | **Modalità Scura** |
 
