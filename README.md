@@ -2,11 +2,11 @@
 
 Livingdex è un'applicazione Flutter che utilizza **Gemini 2.0 Flash** per simulare un Pokédex nella vita reale, dedicata all'identificazione di piante e animali.
 
-| <img width="391" height="376" alt="icona_livingdex" src="https://github.com/user-attachments/assets/312b6e6c-6e5b-4d90-bfab-d66103dbd2f4" />| ![splashdefinitivo](https://github.com/user-attachments/assets/3caaeabb-7c24-4863-a447-a0c96b319d92)| ![nigga](https://github.com/user-attachments/assets/5965befa-045b-4c6c-b8b7-2324715f01a0)|
+| <img width="391" height="376" alt="icona_livingdex" src="https://github.com/user-attachments/assets/188e5869-94bd-4a71-989c-a17d21e2a4d1" />| ![splashdefinitivo](https://github.com/user-attachments/assets/39a7e358-e7dc-47f0-a434-8f31942f9beb)| ![nigga](https://github.com/user-attachments/assets/5965befa-045b-4c6c-b8b7-2324715f01a0)|
 |:--:|:--:|:--:|
 | **Icona Applicazione** | **Splash Screen** | **Modalità Scura** |
 
-|![homepage](https://github.com/user-attachments/assets/49807e69-e6ab-4782-a4f8-d7d1e77ddafd)|![daje](https://github.com/user-attachments/assets/d5c1b828-81e8-443f-8a76-3c7b2db1d0da)|![5913418231807330700 (1)](https://github.com/user-attachments/assets/dbbce33a-d8ee-4be5-801b-8886a8b4a2af)| 
+|![homepage](https://github.com/user-attachments/assets/50e3b2b3-a8f3-4cb8-8313-e10e1445cfe7)|![homepage](https://github.com/user-attachments/assets/83b94a69-f2d1-4f46-9583-f415fc755610)|![5913418231807330700 (1)](https://github.com/user-attachments/assets/7a6b2b77-9f85-4ac8-9660-3f9cdbe104ef)| 
 |:--:|:--:|:--:|
 | **Schermata Principale** | **Schermata Delle Informazioni** | **Chatbot Rotomdex (immagine full-screen)** |
 <br>
