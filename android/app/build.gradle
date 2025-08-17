@@ -1,0 +1,43 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin" // Plugin Flutter
+}
+
+android {
+    namespace "com.example.app" // Namespace per il progetto
+    compileSdkVersion flutter.compileSdkVersion // Versione di compileSdk
+    ndkVersion flutter.ndkVersion // Versione di NDK
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId "com.example.app" // ID dell'applicazione
+        minSdkVersion 23 // Minimo SDK supportato (richiesto da firebase_auth)
+        targetSdkVersion flutter.targetSdkVersion // Target SDK
+        versionCode flutter.versionCode.toInteger() // Codice versione
+        versionName flutter.versionName // Nome versione
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug // Configurazione di firma per la release
+        }
+    }
+}
+
+flutter {
+    source "../.." // Cartella sorgente di Flutter
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.10.1" // Dipendenza di AndroidX Core
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1" // Dipendenza di Lifecycle
+}

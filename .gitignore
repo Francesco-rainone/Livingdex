@@ -1,0 +1,57 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Firebase config files to ignore
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/cloud_firestore/example/android/app/google-services.json
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/firebase_auth/example/android/app/google-services.json
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/firebase_core/example/android/app/google-services.json
+
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/cloud_firestore/example/ios/Runner/GoogleService-Info.plist
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/cloud_firestore/example/macos/Runner/GoogleService-Info.plist
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/firebase_auth/example/ios/Runner/GoogleService-Info.plist
+C:/Users/Utente/OneDrive/Documenti/realdex/app/windows/flutter/ephemeral/.plugin_symlinks/firebase_auth/example/macos/Runner/GoogleService-Info.plist
+
+#firebase_options da configurare nel progetto e config
+/lib/firebase_options.dart
+/lib/config.dart
