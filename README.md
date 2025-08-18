@@ -210,7 +210,7 @@ class DefaultFirebaseOptions {
 <code> flutter pub get </code>
 - Avvia l'applicazione su un emulatore o un dispositivo fisico:
 <code> flutter run -d <device-id> </code>
-**Consiglio**: È preferibile avviare l'app su un dispositivo fisico. Segui questa [Segui questa guida per la configurazione del dispositivo.](https://developer.android.com/studio/run/device?hl=it#:~:text=platform-tools-common-,Connect%20to%20your%20device%20using%20USB,%2Fplatform-tools%2F%20directory.)
+**Consiglio**: È preferibile avviare l'app su un dispositivo fisico. [Segui questa guida per la configurazione del dispositivo.](https://developer.android.com/studio/run/device?hl=it#:~:text=platform-tools-common-,Connect%20to%20your%20device%20using%20USB,%2Fplatform-tools%2F%20directory.)
 
 ## ❗Errori Comuni:
 - **Qualità dell'Immagine < 360p**:  
