@@ -6,7 +6,7 @@ Livingdex è un'applicazione Flutter che utilizza **Gemini 2.0 Flash** per simul
 |:--:|:--:|:--:|
 | **Icona Applicazione** | **Splash Screen** | **Modalità Scura** |
 
-|![homepage](https://github.com/user-attachments/assets/50e3b2b3-a8f3-4cb8-8313-e10e1445cfe7)|![homepage](https://github.com/user-attachments/assets/83b94a69-f2d1-4f46-9583-f415fc755610)|![5913418231807330700 (1)](https://github.com/user-attachments/assets/7a6b2b77-9f85-4ac8-9660-3f9cdbe104ef)| 
+|![homepage](https://github.com/user-attachments/assets/50e3b2b3-a8f3-4cb8-8313-e10e1445cfe7)|![daje](https://github.com/user-attachments/assets/bef0477d-337c-487d-8793-96277792a6b7)|![5913418231807330700 (1)](https://github.com/user-attachments/assets/7a6b2b77-9f85-4ac8-9660-3f9cdbe104ef)| 
 |:--:|:--:|:--:|
 | **Schermata Principale** | **Schermata Delle Informazioni** | **Chatbot Rotomdex (immagine full-screen)** |
 <br>
