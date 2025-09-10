@@ -143,13 +143,13 @@ Un'alternativa più semplice se non si necessita di RAG. Il backend agisce come 
 ## ⚙️ Configurazione e Installazione
 L'app funziona su dispositivi mobili e, al momento, è stata testata solo su **Android**. La configurazione su iOS **non è stata testata** e potrebbe causare problemi nell'installazione e nella configurazione dell'applicazione.
 
-#### 1. Prerequisiti
+### 1. Prerequisiti
 Assicurati di avere installato quanto segue:
 - **Flutter SDK**: [Guida ufficiale](https://docs.flutter.dev/get-started/install)
 - **IDE**: Visual Studio Code e Android Studio per un'esperienza di sviluppo ottimale.
 - **Account Google Cloud & Firebase**: Per utilizzare i servizi di backend e AI.
 
-#### 2. Configurazione del Backend (Google Cloud)
+### 2. Configurazione del Backend (Google Cloud)
 Questa guida si basa sull'approccio consigliato del **Reasoning Engine**.
 
 #### 2.1. Preparazione di Vertex AI Search
