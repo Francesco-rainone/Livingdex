@@ -172,7 +172,7 @@ Questa guida si basa sull'approccio consigliato del **Reasoning Engine**.
   const geminiModel = 'gemini-2.0-flash';
   const cloudRunHost = 'iltuo-servizio-su-cloud-run.a.run.app';
   ```
-- <code> lib/quick_id.dart:</code> Scegli quale provider AI utilizzare (Vertex AI o Google AI) come mostrato nella sezione "Novità"..
+- <code> lib/quick_id.dart:</code> Scegli quale provider AI utilizzare (Vertex AI o Google AI) come mostrato nella sezione [Novità](README.md#-novità-2025) 
 
 ### 3.2. Aggiorna i File di Configurazione
 - <code> flutterfire configure</code> per collegare il progetto Flutter al tuo progetto Firebase. Verrà generato il file <code>lib/firebase_options.dart</code>.
