@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.app" // ID dell'applicazione
-        minSdkVersion 23 // Minimo SDK supportato (richiesto da firebase_auth)
+        minSdkVersion flutter.minSdkVersion // Minimo SDK supportato (richiesto da firebase_auth)
         targetSdkVersion flutter.targetSdkVersion // Target SDK
         versionCode flutter.versionCode.toInteger() // Codice versione
         versionName flutter.versionName // Nome versione
