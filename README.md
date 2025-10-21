@@ -235,5 +235,5 @@ Se vuoi contribuire, sei il benvenuto/a! Le aree di maggiore necessità sono que
 - [Guida Installazione Flutter su Windows (YouTube)](https://youtu.be/8saLa5fh0ZI)
 - [Repo Google di riferimento (Photo Discovery Sample)](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/gemini/sample-apps/photo-discovery)
 - [Panoramica su Vertex AI](https://cloud.google.com/vertex-ai/docs/overview)
-- [Come installare flutter su Windows](https://youtu.be/0SRvmcsRu2w) 
+- [Come installare Flutter su Windows](https://youtu.be/0SRvmcsRu2w) 
 
