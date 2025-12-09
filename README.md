@@ -1,53 +1,55 @@
 # Livingdex
 
-Livingdex è un'applicazione Flutter che utilizza **Gemini 2.0 Flash** per simulare un Pokédex nella vita reale, dedicata all'identificazione di piante e animali.
+> 🇮🇹 **[Leggi in Italiano](README.it.md)**
+
+Livingdex is a Flutter application that uses **Gemini 2.0 Flash** to simulate a real-life Pokédex, dedicated to identifying plants and animals.
 
 | <img width="391" height="376" alt="icona_livingdex" src="https://github.com/user-attachments/assets/188e5869-94bd-4a71-989c-a17d21e2a4d1" />| ![splashdefinitivo](https://github.com/user-attachments/assets/39a7e358-e7dc-47f0-a434-8f31942f9beb)| ![nigga](https://github.com/user-attachments/assets/224c9752-cf03-4fb5-8ea9-d04865192734)|
 |:--:|:--:|:--:|
-| **Icona Applicazione** | **Splash Screen** | **Modalità Scura** |
+| **Application Icon** | **Splash Screen** | **Dark Mode** |
 
 |![homepage](https://github.com/user-attachments/assets/50e3b2b3-a8f3-4cb8-8313-e10e1445cfe7)|![daje](https://github.com/user-attachments/assets/bef0477d-337c-487d-8793-96277792a6b7)|![5913418231807330700 (1)](https://github.com/user-attachments/assets/7a6b2b77-9f85-4ac8-9660-3f9cdbe104ef)| 
 |:--:|:--:|:--:|
-| **Schermata Principale** | **Schermata Delle Informazioni** | **Chatbot Rotomdex (immagine full-screen)** |
+| **Main Screen** | **Information Screen** | **Rotomdex Chatbot (full-screen image)** |
 <br>
 
-## 🗂️ Tabella dei Contenuti
+## 🗂️ Table of Contents
 
-- [Novità 2025](README.md#-novità-2025) 
-- [Descrizione del Progetto](#-descrizione-del-progetto)
-- [Analisi Tecnica](#-analisi-tecnica)
-- [Funzionalità Principali](#-funzionalità-principali)
-- [Architettura e Tecnologie](#%EF%B8%8F-architettura-e-tecnologie)
-  - [Tecnologie Utilizzate](#tecnologie-utilizzate)
-  - [Architettura del Backend Cloud Run](#architettura-del-backend-cloud-run)
-- [Configurazione e Installazione](README.md#%EF%B8%8F-configurazione-e-installazione)
-  - [Prerequisiti](#1-prerequisiti)
-  - [Configurazione del Backend Google Cloud](#2-configurazione-del-backend-google-cloud)
-  - [Configurazione del Progetto Flutter](#3-configurazione-del-progetto-flutter)
-  - [Esecuzione dellApp Flutter](#esecuzione-dellapp-flutter)
-  - [Errori Comuni](#errori-comuni)
-- [Contributi e Sviluppi Futuri](#-contributi-e-sviluppi-futuri)
-- [Link Utili](#-link-utili)
+- [2025 Updates](README.md#-2025-updates) 
+- [Project Description](#-project-description)
+- [Technical Analysis](#-technical-analysis)
+- [Main Features](#-main-features)
+- [Architecture and Technologies](#%EF%B8%8F-architecture-and-technologies)
+  - [Technologies Used](#technologies-used)
+  - [Backend Architecture Cloud Run](#backend-architecture-cloud-run)
+- [Configuration and Installation](README.md#%EF%B8%8F-configuration-and-installation)
+  - [Prerequisites](#1-prerequisites)
+  - [Google Cloud Backend Configuration](#2-google-cloud-backend-configuration)
+  - [Flutter Project Configuration](#3-flutter-project-configuration)
+  - [Running the Flutter App](#running-the-flutter-app)
+  - [Common Errors](#common-errors)
+- [Contributions and Future Developments](#-contributions-and-future-developments)
+- [Useful Links](#-useful-links)
 
 ---
 
 
-## 📣 Novità 2025
+## 📣 2025 Updates
 
-*   **Migrazione a Gemini 2.0 Flash**: Il progetto è stato aggiornato da Gemini 1.5 a Gemini 2.0 Flash per performance migliori.
-*   **Introduzione di Firebase AI Logic**: L'architettura è passata da una dipendenza diretta da **Firebase Vertex AI** al nuovo **Firebase AI Logic**.
+*   **Migration to Gemini 2.0 Flash**: The project has been upgraded from Gemini 1.5 to Gemini 2.0 Flash for better performance.
+*   **Introduction of Firebase AI Logic**: The architecture has moved from a direct dependency on **Firebase Vertex AI** to the new **Firebase AI Logic**.
 
-### Vantaggi del Nuovo Approccio
+### Advantages of the New Approach
 
-Il principale vantaggio di **Firebase AI Logic** è la **flessibilità**. Ora è possibile scegliere facilmente quale provider AI utilizzare (Vertex AI o Google AI) direttamente dalla configurazione del codice, senza dover riscrivere la logica di chiamata. Questo permette di:
-*   Testare e confrontare i modelli e i prezzi dei due provider.
-*   Semplificare la manutenzione e gli aggiornamenti futuri.
+The main advantage of **Firebase AI Logic** is **flexibility**. You can now easily choose which AI provider to use (Vertex AI or Google AI) directly from the code configuration, without having to rewrite the calling logic. This allows you to:
+*   Test and compare the models and pricing of both providers.
+*   Simplify maintenance and future updates.
 
-### Esempio di Codice: Prima vs Ora
+### Code Example: Before vs Now
 
-**Prima (Firebase Vertex AI):**
+**Before (Firebase Vertex AI):**
 ```dart
-// La logica era strettamente legata a FirebaseVertexAI
+// The logic was tightly coupled to FirebaseVertexAI
 model = FirebaseVertexAI.instance.generativeModel(
   model: geminiModel,
   generationConfig: GenerationConfig(
@@ -56,10 +58,10 @@ model = FirebaseVertexAI.instance.generativeModel(
   ),
 );
 ```
-**Ora (Firebase AI Logic):**
-Con Firebase AI Logic, la scelta del provider va configurata nel file che gestisce la logica di chiamata al modello (in questo caso, <code>lib/quick_id.dart</code>)
+**Now (Firebase AI Logic):**
+With Firebase AI Logic, the provider choice is configured in the file that manages the model calling logic (in this case, <code>lib/quick_id.dart</code>)
 
-👉 Provider Vertex AI (per soluzioni enterprise e RAG):
+👉 Vertex AI Provider (for enterprise solutions and RAG):
 ```dart
 final googleAI = FirebaseAI.vertexAI();
 
@@ -71,7 +73,7 @@ model = googleAI.generativeModel(
   ),
 );
 ```
-👉 Provider Google AI (per prototipazione e costi inferiori):
+👉 Google AI Provider (for prototyping and lower costs):
 ```dart
 final googleAI = FirebaseAI.googleAI();
 
@@ -83,44 +85,44 @@ model = googleAI.generativeModel(
   ),
 );
 ```
-## 📖 Descrizione del Progetto
+## 📖 Project Description
 
-Livingdex è un progetto personale che mi sono divertito a sviluppare. L'obiettivo principale è quello di soddisfare la curiosità delle persone riguardo agli animali e alle piante che incontrano. Scattando una foto tramite l'applicazione, è possibile identificare l'essere vivente inquadrato, ottenere informazioni dettagliate (nome, peso, altezza, descrizione arricchita con curiosità) e interagire con un chatbot per approfondire ulteriormente che risponderà consultando fonti certificate alle domande.
+Livingdex is a personal project that I enjoyed developing. The main goal is to satisfy people's curiosity about the animals and plants they encounter. By taking a photo through the application, you can identify the living being in the image, obtain detailed information (name, weight, height, description enriched with curiosities), and interact with a chatbot for further exploration that will respond by consulting certified sources.
 
-Livingdex è stata pensata per invogliare le persone a guardarsi intorno e vedere meglio ciò che li circonda, con uno sguardo nuovo sull’ambiente. Il tutto è presentato con un’interfaccia che richiama l’estetica di un Pokédex, arricchita da funzionalità aggiuntive come la modalità scura.
+Livingdex is designed to encourage people to look around and see their surroundings better, with a fresh perspective on the environment. Everything is presented with an interface that recalls the aesthetics of a Pokédex, enhanced with additional features like dark mode.
 
-## 📑 Analisi Tecnica
-Qui potete trovare l’analisi funzionale del progetto e la cartella con gli unit test svolti:
-- [Analisi Funzionale](Analisi_Funzionale.md)
-- [Unit Test](test/)
+## 📑 Technical Analysis
+Here you can find the functional analysis of the project and the folder with the unit tests performed:
+- [Functional Analysis](Analisi_Funzionale.en.md)
+- [Unit Tests](test/)
 
-## ✨ Funzionalità Principali
-- **Riconoscimento Visuale:** Identificazione di piante e animali tramite Gemini 2.0 Flash.
-- **Interfaccia a Tema Pokédex:** UI ispirata al design originale per un'esperienza immersiva.
-- **Chatbot Integrato (Rotomdex):** Assistente virtuale che fornisce informazioni affidabili da Wikipedia inglese, grazie a un Reasoning Engine che effettua RAG (Retrieval-Augmented Generation).
-- **Modalità Scura:** Per un'esperienza visiva personalizzabile e confortevole.
+## ✨ Main Features
+- **Visual Recognition:** Identification of plants and animals via Gemini 2.0 Flash.
+- **Pokédex-Themed Interface:** UI inspired by the original design for an immersive experience.
+- **Integrated Chatbot (Rotomdex):** Virtual assistant that provides reliable information from English Wikipedia, thanks to a Reasoning Engine that performs RAG (Retrieval-Augmented Generation).
+- **Dark Mode:** For a customizable and comfortable visual experience.
 
-## 🛠️ Architettura e Tecnologie
+## 🛠️ Architecture and Technologies
 
-### Tecnologie Utilizzate
-- **Linguaggio e Framework**: Dart e Flutter
-- **Ai e Provider**: Gemini 2.0 Flash, Firebase AI Logic (con provider Vertex AI o Google AI)
+### Technologies Used
+- **Language and Framework**: Dart and Flutter
+- **AI and Provider**: Gemini 2.0 Flash, Firebase AI Logic (with Vertex AI or Google AI provider)
 - **Backend**: Google Cloud Platform, Cloud Run, Firebase, FlutterFire
 
-#### Architettura del Backend (Cloud Run)
-Per gestire le richieste dall'app, è necessario un backend su Cloud Run. **Si consigliano due approcci**:
+#### Backend Architecture (Cloud Run)
+To handle requests from the app, a backend on Cloud Run is required. **Two approaches are recommended**:
 
-#### Approccio 1: Reasoning Engine (Consigliato)
-Questo approccio orchestra più servizi per fornire risposte di alta qualità (RAG).
+#### Approach 1: Reasoning Engine (Recommended)
+This approach orchestrates multiple services to provide high-quality responses (RAG).
 
-1.  **Riceve l'immagine** dall'app tramite un endpoint HTTP.
-2.  La carica su **Cloud Storage**.
-3.  Esegue una ricerca su **Vertex AI Search** per trovare informazioni pertinenti.
-4.  Costruisce un prompt per Gemini, includendo il contesto della ricerca.
-5.  Chiama il modello Gemini tramite **Firebase AI Logic** richiedendo un output JSON strutturato.
-6.  Restituisce i dati formattati all'app.
+1.  **Receives the image** from the app via an HTTP endpoint.
+2.  Uploads it to **Cloud Storage**.
+3.  Performs a search on **Vertex AI Search** to find relevant information.
+4.  Builds a prompt for Gemini, including the search context.
+5.  Calls the Gemini model via **Firebase AI Logic** requesting structured JSON output.
+6.  Returns the formatted data to the app.
 
-**Esempio di Risposta JSON Strutturata**:
+**Structured JSON Response Example**:
 
 ```json
 
@@ -131,60 +133,60 @@ Questo approccio orchestra più servizi per fornire risposte di alta qualità (R
   "common_name": "Platano",
   "confidence": 0.93,
   "height_estimate": "5-10 m",
-  "description": "Descrizione breve...",
+  "description": "Short description...",
   "sources": [
     {"name":"Wikipedia", "url":"https://en.wikipedia.org/...."}
   ]
 }
 ```
-#### Approccio 2: Proxy Semplice
-Un'alternativa più semplice se non si necessita di RAG. Il backend agisce come un proxy che autentica la richiesta e la inoltra a Gemini. È più veloce ed economico da implementare, ma con una qualità inferiore nelle risposte.
+#### Approach 2: Simple Proxy
+A simpler alternative if RAG is not needed. The backend acts as a proxy that authenticates the request and forwards it to Gemini. It's faster and cheaper to implement, but with lower response quality.
 
-## ⚙️ Configurazione e Installazione
-L'app funziona su dispositivi mobili e, al momento, è stata testata solo su **Android**. La configurazione su iOS **non è stata testata** e potrebbe causare problemi nell'installazione e nella configurazione dell'applicazione.
+## ⚙️ Configuration and Installation
+The app works on mobile devices and, at the moment, has been tested only on **Android**. iOS configuration **has not been tested** and may cause installation and configuration issues.
 
-### 1. Prerequisiti
-Assicurati di avere installato quanto segue:
-- **Flutter SDK**: [Guida ufficiale](https://docs.flutter.dev/get-started/install)
-- **IDE**: Visual Studio Code e Android Studio per un'esperienza di sviluppo ottimale.
-- **Account Google Cloud & Firebase**: Per utilizzare i servizi di backend e AI.
+### 1. Prerequisites
+Make sure you have the following installed:
+- **Flutter SDK**: [Official Guide](https://docs.flutter.dev/get-started/install)
+- **IDE**: Visual Studio Code and Android Studio for an optimal development experience.
+- **Google Cloud & Firebase Account**: To use backend and AI services.
 
-### 2. Configurazione del Backend (Google Cloud)
-Questa guida si basa sull'approccio consigliato del **Reasoning Engine**.
+### 2. Google Cloud Backend Configuration
+This guide is based on the recommended **Reasoning Engine** approach.
 
-#### 2.1. Preparazione di Vertex AI Search
-- Nel tuo progetto Google Cloud, crea un **data store di ricerca** su Vertex AI Search.
-- Configura **un'app di ricerca** con i dati necessari per l'identificazione (es. descrizioni da Wikipedia).
+#### 2.1. Vertex AI Search Preparation
+- In your Google Cloud project, create a **search data store** on Vertex AI Search.
+- Configure **a search app** with the necessary data for identification (e.g., descriptions from Wikipedia).
 
-#### 2.2. Deploy dell'Agente su Cloud Run
-- Crea un'applicazione (es. in Node.js o Python) che funga da **Reasoning Engine**.
-- Distribuisci l'app su **Cloud Run**. Questo servizio orchestrerà le chiamate a Vertex AI Search e Gemini.
+#### 2.2. Agent Deployment on Cloud Run
+- Create an application (e.g., in Node.js or Python) that acts as a **Reasoning Engine**.
+- Deploy the app on **Cloud Run**. This service will orchestrate calls to Vertex AI Search and Gemini.
 
-#### 2.3. Abilitazione di Firebase AI Logic
-- Nel tuo progetto Firebase, abilita Firebase AI Logic.
-- Configura l'integrazione per comunicare con l'endpoint del tuo agente su Cloud Run.
+#### 2.3. Enabling Firebase AI Logic
+- In your Firebase project, enable Firebase AI Logic.
+- Configure the integration to communicate with your agent's endpoint on Cloud Run.
 
-## 3. Configurazione del Progetto Flutter
+## 3. Flutter Project Configuration
 
-### 3.1. Collega Firebase
-- crea il file <code> config.dart:</code> all'interno di <code>lib/ </code> inserisci l'URL del tuo servizio Cloud Run e il modello che vuoi utilizzare.
+### 3.1. Connect Firebase
+- Create the <code>config.dart</code> file inside <code>lib/</code> and insert your Cloud Run service URL and the model you want to use.
   ```dart
   const geminiModel = 'gemini-2.0-flash';
-  const cloudRunHost = 'iltuo-servizio-su-cloud-run.a.run.app';
+  const cloudRunHost = 'your-cloud-run-service.a.run.app';
   ```
-- <code> lib/quick_id.dart:</code> Scegli quale provider AI utilizzare (Vertex AI o Google AI) come mostrato nella sezione [Novità](README.md#-novità-2025) 
+- <code>lib/quick_id.dart:</code> Choose which AI provider to use (Vertex AI or Google AI) as shown in the [Updates](README.md#-2025-updates) section
 
-### 3.2. Aggiorna i File di Configurazione
-- <code> flutterfire configure</code> per collegare il progetto Flutter al tuo progetto Firebase. Verrà generato il file <code>lib/firebase_options.dart</code>.
-**Esempio di <code>lib/firebase_options.dart</code>**:
+### 3.2. Update Configuration Files
+- <code>flutterfire configure</code> to connect the Flutter project to your Firebase project. This will generate the <code>lib/firebase_options.dart</code> file.
+**Example of <code>lib/firebase_options.dart</code>**:
  ```dart
-// File generato automaticamente da `flutterfire configure`.
+// File automatically generated by `flutterfire configure`.
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    // Esempio per Android
+    // Example for Android
     if (defaultTargetPlatform == TargetPlatform.android) {
       return const FirebaseOptions(
         apiKey: 'ANDROID_API_KEY_PLACEHOLDER',
@@ -195,7 +197,7 @@ class DefaultFirebaseOptions {
       );
     }
 
-    // Aggiungi qui le configurazioni per le altre piattaforme (es. iOS)
+    // Add configurations for other platforms here (e.g., iOS)
 
     throw UnsupportedError(
       'DefaultFirebaseOptions are not supported for this platform.',
@@ -205,35 +207,34 @@ class DefaultFirebaseOptions {
 
   ```
 
-### Esecuzione dell'App Flutter
-- Installa tutte le dipendenze del progetto:
-<code> flutter pub get </code>
-- Avvia l'applicazione su un emulatore o un dispositivo fisico:
-<code> flutter run -d <device-id> </code>
-**Consiglio**: È preferibile avviare l'app su un dispositivo fisico. [Segui questa guida per la configurazione del dispositivo.](https://developer.android.com/studio/run/device?hl=it#:~:text=platform-tools-common-,Connect%20to%20your%20device%20using%20USB,%2Fplatform-tools%2F%20directory.)
+### Running the Flutter App
+- Install all project dependencies:
+<code>flutter pub get</code>
+- Start the application on an emulator or physical device:
+<code>flutter run -d <device-id></code>
+**Tip**: It's preferable to run the app on a physical device. [Follow this guide for device configuration.](https://developer.android.com/studio/run/device?hl=it#:~:text=platform-tools-common-,Connect%20to%20your%20device%20using%20USB,%2Fplatform-tools%2F%20directory.)
 
-## ❗Errori Comuni:
-- **Qualità dell'Immagine < 360p**:  
-   Se la qualità dell'immagine è inferiore a 360p, l'API Gemini può interpretare erroneamente il soggetto o non riuscire a riconoscere l'immagine, comunicando che il soggetto non è né un animale né una pianta. In tal caso, verrà visualizzato un messaggio di errore generico che indica che l'immagine non può essere identificata.
-- **Lentezza nel Caricamento**:  
-   La lentezza nel caricare la descrizione del soggetto potrebbe essere dovuta a un problema di connessione internet o alla comunicazione con l'API Gemini, che potrebbe richiedere più tempo in base alla qualità della connessione.
+## ❗Common Errors:
+- **Image Quality < 360p**:  
+   If the image quality is below 360p, the Gemini API may misinterpret the subject or fail to recognize the image, reporting that the subject is neither an animal nor a plant. In this case, a generic error message will be displayed indicating that the image cannot be identified.
+- **Slow Loading**:  
+   Slow loading of the subject's description may be due to an internet connection problem or communication with the Gemini API, which may take longer depending on connection quality.
 
-## 🤝 Contributi e Sviluppi Futuri
+## 🤝 Contributions and Future Developments
 
-### Sviluppi Futuri
-- **Text-to-Speech**: Aggiungere una funzione di lettura vocale delle descrizioni per migliorare l'accessibilità.
-- **Supporto IOS**: Testare e risolvere eventuali problemi di compatibilità.
-- **Miglioramenti UI/UX**:  Ottimizzare l'interfaccia utente.
+### Future Developments
+- **Text-to-Speech**: Add a voice reading function for descriptions to improve accessibility.
+- **iOS Support**: Test and resolve any compatibility issues.
+- **UI/UX Improvements**: Optimize the user interface.
 
-### Come Contribuire
-Se vuoi contribuire, sei il benvenuto/a! Le aree di maggiore necessità sono quelle elencate sopra. Apri una Pull Request per proporre le tue modifiche.
+### How to Contribute
+If you want to contribute, you are welcome! The areas of greatest need are those listed above. Open a Pull Request to propose your changes.
 
 ---
-## 🔗 Link Utili
-- [Firebase AI Logic – Documentazione Ufficiale](https://firebase.google.com/docs/ai-logic/faq-and-troubleshooting?hl=it&api=dev#differences-between-gemini-api-providers)
-- [Differenze di Prezzo: Vertex AI vs Google AI](https://cloud.google.com/vertex-ai/pricing)
-- [Guida Installazione Flutter su Windows (YouTube)](https://youtu.be/8saLa5fh0ZI)
-- [Repo Google di riferimento (Photo Discovery Sample)](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/gemini/sample-apps/photo-discovery)
-- [Panoramica su Vertex AI](https://cloud.google.com/vertex-ai/docs/overview)
-- [Come installare Flutter su Windows](https://youtu.be/0SRvmcsRu2w) 
-
+## 🔗 Useful Links
+- [Firebase AI Logic – Official Documentation](https://firebase.google.com/docs/ai-logic/faq-and-troubleshooting?hl=it&api=dev#differences-between-gemini-api-providers)
+- [Pricing Differences: Vertex AI vs Google AI](https://cloud.google.com/vertex-ai/pricing)
+- [Flutter Installation Guide on Windows (YouTube)](https://youtu.be/8saLa5fh0ZI)
+- [Google Reference Repo (Photo Discovery Sample)](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/gemini/sample-apps/photo-discovery)
+- [Vertex AI Overview](https://cloud.google.com/vertex-ai/docs/overview)
+- [How to Install Flutter on Windows](https://youtu.be/0SRvmcsRu2w) 
