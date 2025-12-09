@@ -15,14 +15,14 @@ Livingdex is a Flutter application that uses **Gemini 2.0 Flash** to simulate a 
 
 ## 🗂️ Table of Contents
 
-- [2025 Updates](README.md#-2025-updates) 
+- [2025 Updates](#-2025-updates) 
 - [Project Description](#-project-description)
 - [Technical Analysis](#-technical-analysis)
 - [Main Features](#-main-features)
 - [Architecture and Technologies](#%EF%B8%8F-architecture-and-technologies)
   - [Technologies Used](#technologies-used)
   - [Backend Architecture Cloud Run](#backend-architecture-cloud-run)
-- [Configuration and Installation](README.md#%EF%B8%8F-configuration-and-installation)
+- [Configuration and Installation](#%EF%B8%8F-configuration-and-installation)
   - [Prerequisites](#1-prerequisites)
   - [Google Cloud Backend Configuration](#2-google-cloud-backend-configuration)
   - [Flutter Project Configuration](#3-flutter-project-configuration)
@@ -174,7 +174,7 @@ This guide is based on the recommended **Reasoning Engine** approach.
   const geminiModel = 'gemini-2.0-flash';
   const cloudRunHost = 'your-cloud-run-service.a.run.app';
   ```
-- <code>lib/quick_id.dart:</code> Choose which AI provider to use (Vertex AI or Google AI) as shown in the [Updates](README.md#-2025-updates) section
+- <code>lib/quick_id.dart:</code> Choose which AI provider to use (Vertex AI or Google AI) as shown in the [Updates](#-2025-updates) section
 
 ### 3.2. Update Configuration Files
 - <code>flutterfire configure</code> to connect the Flutter project to your Firebase project. This will generate the <code>lib/firebase_options.dart</code> file.
