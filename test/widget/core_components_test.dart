@@ -1,3 +1,4 @@
+/// Tests for [MetadataCard], [TagCapsule], and [TextCapsule] widgets.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/ui/components/core_components.dart';
@@ -7,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 
 void main() {
   group('MetadataCard', () {
-    testWidgets('Mostra shimmer durante il caricamento', (tester) async {
+    testWidgets('Shows shimmer while loading', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -22,7 +23,7 @@ void main() {
       expect(find.byType(Shimmer), findsOneWidget);
     });
 
-    testWidgets('Mostra metadati quando disponibili', (tester) async {
+    testWidgets('Displays metadata when available', (tester) async {
       final mockMetadata = Metadata(
         suggestedQuestions: ['Q1', 'Q2'],
         name: 'Pikachu',
@@ -49,7 +50,7 @@ void main() {
   });
 
   group('TagCapsule', () {
-    testWidgets('Mostra 3 tag correttamente', (tester) async {
+    testWidgets('Renders 3 tags correctly', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -66,7 +67,7 @@ void main() {
   });
 
   group('TextCapsule', () {
-    testWidgets('Mostra contenuto e pulsante copia', (tester) async {
+    testWidgets('Shows content and copy button', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

@@ -1,3 +1,4 @@
+/// Tests for [GenerateMetadataScreen] with mocked dependencies.
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,12 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:app/ui/screens/quick_id.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
-// Definizione dell'interfaccia del servizio
+/// Image analysis service interface for testing.
 abstract class AnalysisService {
   Future<String> analyzeImage(Uint8List image);
 }
 
-// Mock del servizio
 class MockAnalysisService extends Mock implements AnalysisService {}
 
 void main() {
@@ -30,7 +30,7 @@ void main() {
       mockService = MockAnalysisService();
     });
 
-    testWidgets('Generazione metadati con Firestore mockato', (tester) async {
+    testWidgets('Generates metadata with mocked Firestore', (tester) async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
@@ -41,7 +41,6 @@ void main() {
         ),
       );
 
-      // Simula la cattura di un'immagine
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
 

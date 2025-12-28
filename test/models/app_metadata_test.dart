@@ -1,4 +1,4 @@
-// test/models/metadata_test.dart
+/// Tests for [Metadata] model serialization and widget building.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/models/metadata.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-// test/policies/policies_test.dart
+/// Tests for [Capabilities] and [Policy] classes.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/functionality/adaptive/capabilities.dart';
 import 'package:app/functionality/adaptive/policies.dart';

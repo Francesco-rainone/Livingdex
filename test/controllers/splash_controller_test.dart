@@ -1,12 +1,11 @@
+/// Tests for [SplashController] navigation behavior.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/controllers/splash_controller.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
-  testWidgets('Reindirizzamento dopo 1750ms con GoRouter reale',
-      (WidgetTester tester) async {
-    // Configura il router reale
+  testWidgets('Redirects to /home after 1750ms', (WidgetTester tester) async {
     final router = GoRouter(
       routes: [
         GoRoute(
@@ -20,23 +19,16 @@ void main() {
       ],
     );
 
-    // Carica l'app con il router configurato
     await tester.pumpWidget(
       MaterialApp.router(
         routerConfig: router,
       ),
     );
 
-    // Ottieni il contesto dal widget caricato
     final context = tester.element(find.byType(Scaffold));
     final controller = SplashController();
 
-    // Esegui il metodo load
     await controller.load(context);
-
-    // Aspetta il completamento del delay e della navigazione
     await tester.pumpAndSettle(const Duration(milliseconds: 1750));
-
-    // Verifica la posizione corrente del router
   });
 }

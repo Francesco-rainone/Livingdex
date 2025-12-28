@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
-// Internal project imports for UI components, models, and utilities.
 import '../components/adaptive_helper_widgets.dart';
 import '../../models/metadata.dart';
 import '../components/core_components.dart';
@@ -22,12 +21,7 @@ import 'chat.dart';
 import '../utilities.dart';
 import '../../config.dart';
 
-/// The main screen for generating image metadata.
-///
-/// This screen provides a camera interface for users to capture an image or
-/// select one from their gallery. Once an image is provided, it is sent to
-/// a Vertex AI model to generate descriptive metadata, which is then displayed.
-/// The screen is responsive, adapting its layout for compact and expanded displays.
+/// Camera/gallery screen for capturing images and generating AI metadata.
 class GenerateMetadataScreen extends StatefulWidget {
   const GenerateMetadataScreen({super.key});
 
@@ -35,154 +29,92 @@ class GenerateMetadataScreen extends StatefulWidget {
   State<GenerateMetadataScreen> createState() => _GenerateMetadataScreenState();
 }
 
-/// The state management class for [GenerateMetadataScreen].
-///
-/// It uses [WidgetsBindingObserver] to manage the camera's lifecycle in response
-/// to app lifecycle changes (e.g., app paused, resumed).
+/// State for [GenerateMetadataScreen]. Uses [WidgetsBindingObserver] for camera lifecycle.
 class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
     with WidgetsBindingObserver {
-  /// The Vertex AI generative model instance used for image analysis.
   late GenerativeModel model;
-
-  /// A flag to indicate when an API call is in progress.
-  /// Used to show loading indicators and prevent duplicate requests.
   bool _loading = false;
-
-  /// Holds the byte data of the image captured by the camera or selected from the gallery.
-  /// When `null`, the camera preview is shown. When populated, the image review screen is shown.
   Uint8List? _image;
-
-  /// The timeout duration for the generative model API call.
   final Duration _modelTimeout = const Duration(seconds: 27);
 
-  // --- Camera Control Variables ---
-
-  /// A list of available cameras on the device.
   List<CameraDescription> cameras = [];
-
-  /// The controller for the device camera, managing preview, capture, and focus.
   CameraController? _cameraController;
-
-  /// A flag to track if the camera has been successfully initialized.
   bool _isCameraInitialized = false;
 
-  // --- Camera Zoom Control Variables ---
-
-  /// Sensitivity for pinch-to-zoom gestures.
   double zoomSensitivity = 0.5;
-
-  /// The scale value from the previous `onScaleUpdate` event, used to calculate zoom delta.
   double _previousScale = 1.0;
-
-  /// The minimum zoom level supported by the camera.
   double _minZoomLevel = 1.0;
-
-  /// The maximum zoom level supported by the camera.
   double _maxZoomLevel = 1.0;
-
-  /// The current zoom level applied to the camera.
   double _currentZoomLevel = 1.0;
-
-  /// A flag indicating if the current camera supports zooming.
   bool _isZoomSupported = false;
 
-  // --- Camera Capture Robustness Variables ---
-
-  /// A flag to prevent concurrent picture-taking calls, which can cause errors.
   bool _isTakingPicture = false;
-
-  /// The number of times to retry taking a picture if a buffer-related error occurs.
-  /// This helps mitigate common `ImageReader_JNI` errors on some Android devices.
   final int _captureRetryCount = 3;
-
-  /// The delay between capture retries.
   final Duration _captureRetryDelay = const Duration(milliseconds: 500);
 
   @override
   void initState() {
     super.initState();
-    // Lock screen orientation to portrait mode for a consistent camera experience.
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    // Initialize the Firebase Vertex AI model with specific generation configurations.
     final googleAI = FirebaseAI.vertexAI();
     model = googleAI.generativeModel(
-      model: geminiModel, // Model name from config.dart
+      model: geminiModel,
       generationConfig: GenerationConfig(
-        temperature: 0.1, // Lower temperature for more deterministic responses.
-        responseMimeType:
-            'application/json', // Request a JSON formatted response.
+        temperature: 0.1,
+        responseMimeType: 'application/json',
       ),
     );
 
-    // Start the camera initialization process.
     _initializeCamera();
-    // Register this object as an observer of app lifecycle events.
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    // Restore preferred orientations when the screen is disposed.
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-    // Release the camera controller resources.
     _cameraController?.dispose();
-    // Remove the lifecycle observer.
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  /// Handles app lifecycle state changes to manage the camera controller.
-  /// This is crucial for releasing the camera when the app is in the background
-  /// and re-initializing it when the app is resumed.
+  /// Manages camera based on app lifecycle (dispose on inactive, reinit on resume).
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final CameraController? cameraController = _cameraController;
 
-    // Do nothing if the controller is not available or not initialized.
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
 
-    // Dispose of the controller when the app becomes inactive (e.g., goes to the background).
     if (state == AppLifecycleState.inactive) {
       cameraController.dispose();
-    }
-    // Re-initialize the camera when the app is resumed.
-    else if (state == AppLifecycleState.resumed) {
+    } else if (state == AppLifecycleState.resumed) {
       _initializeCamera();
     }
   }
 
-  /// Initializes the camera.
-  ///
-  /// This function discovers available cameras, creates and initializes a
-  /// [CameraController], and retrieves its zoom capabilities. It safely disposes
-  /// of any existing controller before creating a new one to prevent resource leaks.
+  /// Initializes camera controller and retrieves zoom capabilities.
   Future<void> _initializeCamera() async {
     try {
-      // Ensure any previous controller is disposed of before re-initializing.
       if (_cameraController != null) {
         await _cameraController!.dispose();
       }
 
       cameras = await availableCameras();
       if (cameras.isNotEmpty) {
-        // Create a new camera controller using the first available camera (usually the back camera).
         _cameraController = CameraController(
           cameras[0],
           ResolutionPreset.high,
-          enableAudio: false, // Audio is not needed for this application.
+          enableAudio: false,
           imageFormatGroup: ImageFormatGroup.jpeg,
         );
 
         await _cameraController!.initialize();
 
-        // Fetch zoom capabilities from the initialized controller.
         double minZoom = await _cameraController!.getMinZoomLevel();
         double maxZoom = await _cameraController!.getMaxZoomLevel();
 
-        // Update the state only if the widget is still mounted.
         if (mounted) {
           setState(() {
             _minZoomLevel = minZoom;
@@ -195,35 +127,27 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
       }
     } catch (e) {
       print('Error initializing camera: $e');
-      // Potentially show an error message to the user here.
     }
   }
 
-  /// Opens the device's image gallery to select an image.
-  ///
-  /// After an image is picked, it triggers the metadata generation process.
+  /// Opens gallery to pick an image, then triggers metadata generation.
   void pickImage(ImageSource source) async {
     try {
       final pickedImage = await ImagePicker().pickImage(source: source);
-      if (pickedImage == null) return; // User canceled the picker.
+      if (pickedImage == null) return;
 
       final fileBytes = await pickedImage.readAsBytes();
       setState(() => _image = fileBytes);
-      _sendVertexMessage(); // Send the selected image for analysis.
+      _sendVertexMessage();
     } catch (e) {
       _showError(e.toString());
     }
   }
 
-  /// Resets the view by removing the current image and re-activating the camera.
-  ///
-  /// This function fully re-initializes the camera to ensure the preview is
-  /// reliably restored, which is more robust than simply resuming a paused preview.
+  /// Resets view: reinitializes camera and clears image/metadata.
   Future<void> removeImage(BuildContext context) async {
-    // Re-initialize the camera to guarantee a fresh and active preview stream.
     await _initializeCamera();
 
-    // Update the state to remove the image and clear any existing metadata.
     if (mounted) {
       setState(() {
         _image = null;
@@ -232,26 +156,17 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
     }
   }
 
-  /// Captures an image using the camera controller.
-  ///
-  /// This method includes logic to:
-  /// 1. Prevent concurrent captures.
-  /// 2. Pause the camera preview before taking a picture.
-  /// 3. Retry the capture on specific `CameraException` types related to image buffers.
-  /// 4. Correct the image orientation using EXIF data.
-  /// 5. Trigger the metadata generation process upon successful capture.
+  /// Captures image with retry logic for buffer errors, corrects EXIF orientation.
   Future<void> _captureImage() async {
     if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return;
     }
-    // Prevent multiple captures from being initiated simultaneously.
     if (_isTakingPicture) {
       return;
     }
 
     _isTakingPicture = true;
     try {
-      // It's good practice to pause the preview before taking a picture.
       if (_cameraController!.value.isPreviewPaused == false) {
         await _cameraController!.pausePreview();
       }
@@ -259,14 +174,12 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
       XFile? imageFile;
       int attempts = 0;
 
-      // Retry loop to handle intermittent buffer errors on some devices.
       while (attempts < _captureRetryCount) {
         try {
           imageFile = await _cameraController!.takePicture();
-          break; // Success, exit the loop.
+          break;
         } on CameraException catch (ce) {
           final msg = (ce.description ?? ce.code).toLowerCase();
-          // Check for common error messages related to buffer/ImageReader issues.
           final isBufferError = msg.contains('unable to acquire') ||
               msg.contains('maximages') ||
               msg.contains('imagereader') ||
@@ -275,16 +188,16 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
           if (isBufferError) {
             attempts++;
             if (attempts < _captureRetryCount) {
-              await Future.delayed(_captureRetryDelay); // Wait before retrying.
+              await Future.delayed(_captureRetryDelay);
               continue;
             } else {
-              rethrow; // Max retries reached, rethrow the exception.
+              rethrow;
             }
           } else {
-            rethrow; // Not a buffer error, rethrow immediately.
+            rethrow;
           }
         } catch (e) {
-          rethrow; // Rethrow any other unexpected errors.
+          rethrow;
         }
       }
 
@@ -293,8 +206,6 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
         return;
       }
 
-      // Mobile cameras often save images with orientation data in EXIF tags.
-      // This step rotates the image file to match the visual orientation.
       final originalFile = File(imageFile.path);
       final rotatedFile =
           await FlutterExifRotation.rotateImage(path: originalFile.path);
@@ -306,12 +217,10 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
         });
       }
 
-      _sendVertexMessage(); // Start the AI analysis.
+      _sendVertexMessage();
     } catch (e) {
       _showError(e.toString());
     } finally {
-      // The preview is intentionally NOT resumed here. It is resumed when the user
-      // explicitly taps the "remove image" button via `removeImage()`.
       _isTakingPicture = false;
     }
   }
@@ -321,8 +230,7 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
     final metadata = context.watch<AppState>().metadata;
     final isExpanded = MediaQuery.sizeOf(context).width >= Breakpoints.expanded;
 
-    // --- State 1: Camera Preview is Active ---
-    // If no image has been captured/selected and the camera is ready.
+    // Camera preview active
     if (_image == null && _isCameraInitialized) {
       return Scaffold(
         appBar: PreferredSize(
@@ -355,7 +263,6 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
           children: [
             SizedBox.expand(
               child: GestureDetector(
-                // Handle pinch-to-zoom if supported.
                 onScaleStart:
                     _isZoomSupported ? (details) => _previousScale = 1.0 : null,
                 onScaleUpdate: _isZoomSupported
@@ -367,19 +274,16 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
                         _previousScale = details.scale;
                       }
                     : null,
-                // Handle tap-to-focus.
                 onTapDown: (details) {
                   if (_cameraController?.value.isInitialized ?? false) {
                     try {
                       final previewSize = _cameraController!.value.previewSize!;
-                      // Calculate the tap position relative to the preview size.
                       final scale =
                           MediaQuery.of(context).size.width / previewSize.width;
                       final tapPos = details.localPosition;
                       final x = (tapPos.dx / scale) / previewSize.width;
                       final y = (tapPos.dy / scale) / previewSize.height;
 
-                      // Set the focus point, clamping values to the [0, 1] range.
                       _cameraController!.setFocusPoint(
                         Offset(x.clamp(0.0, 1.0), y.clamp(0.0, 1.0)),
                       );
@@ -394,7 +298,6 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
                 ),
               ),
             ),
-            // Bottom bar with capture button.
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -410,10 +313,8 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
       );
     }
 
-    // --- State 2: Image Review Screen ---
-    // If an image has been captured or selected.
+    // Image review screen
     if (_image != null) {
-      // Choose the appropriate layout based on screen width.
       return isExpanded
           ? ExpandedScreen(
               image: _image!,
@@ -429,19 +330,14 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
             );
     }
 
-    // --- State 3: Initial Loading State ---
-    // Shown while the camera is initializing for the first time.
+    // Initial loading state
     return Scaffold(
       appBar: AppBar(title: const Text('Waiting for Camera')),
       body: const Center(child: Text('Please wait a moment.')),
     );
   }
 
-  /// Sends the captured image and a text prompt to the Vertex AI model.
-  ///
-  /// This function constructs a multipart request containing a detailed prompt
-  /// and the image data. It then processes the JSON response from the model
-  /// and updates the application state with the generated metadata.
+  /// Sends image to Vertex AI and updates app state with generated metadata.
   Future<void> _sendVertexMessage() async {
     if (_loading || _image == null) return;
 
@@ -450,7 +346,6 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
     try {
       final response = await model.generateContent(
         [
-          // This is a multimodal request with both text and image parts.
           Content.multi([
             TextPart(
               // The detailed prompt instructs the AI on the desired output format (JSON)
@@ -495,16 +390,14 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
               mentre rielabori le informazioni. 
               Rispondi in formato JSON e assicurati che all'interno del formato i valori siano stringa con le keys "name", "height", "weight", "description" e "suggestedQuestions".""",
             ),
-            // The image data itself, specified as JPEG.
             InlineDataPart('image/jpeg', _image!),
           ])
         ],
-      ).timeout(_modelTimeout); // Apply a timeout to the API call.
+      ).timeout(_modelTimeout);
 
       if (response.text != null) {
         final jsonMap = json.decode(response.text!);
         if (mounted) {
-          // Use Provider to update the global app state with the new metadata.
           context.read<AppState>().updateMetadata(
                 Metadata.fromJson(jsonMap),
               );
@@ -523,7 +416,7 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
     }
   }
 
-  /// Displays an [AlertDialog] with a given error message.
+  /// Shows error dialog with message.
   void _showError(String message) {
     if (!mounted) return;
     showDialog(
@@ -542,14 +435,7 @@ class _GenerateMetadataScreenState extends State<GenerateMetadataScreen>
   }
 }
 
-// ============================================================================
-// SECONDARY UI WIDGETS
-// These widgets define the different layouts for the image review screen.
-// ============================================================================
-
-/// The UI layout for compact screens (e.g., mobile phones in portrait).
-///
-/// Displays the image and metadata card in a vertical list.
+/// Compact screen layout (mobile portrait): vertical list with image and metadata.
 class CompactScreen extends StatelessWidget {
   const CompactScreen({
     required this.image,
@@ -564,10 +450,9 @@ class CompactScreen extends StatelessWidget {
   final Metadata? metadata;
   final VoidCallback onRemoveImage;
 
-  /// Navigates to the chat screen.
+  /// Navigates to chat screen.
   void goToChat(BuildContext context) {
     if (loading) return;
-    // Use push() to add the page to the stack and use the new path.
     context.push('/home/chat');
   }
 
@@ -649,10 +534,9 @@ class ExpandedScreen extends StatelessWidget {
   final Metadata? metadata;
   final VoidCallback onRemoveImage;
 
-  /// Controller to show or hide the chat overlay.
   final OverlayPortalController _aiChatController = OverlayPortalController();
 
-  /// Toggles the visibility of the chat overlay.
+  /// Toggles chat overlay visibility.
   void showChat() {
     if (loading) return;
     _aiChatController.toggle();
@@ -668,7 +552,6 @@ class ExpandedScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image container
               ConstrainedBox(
                 constraints:
                     BoxConstraints(maxWidth: constraints.maxWidth * .55),
@@ -683,7 +566,6 @@ class ExpandedScreen extends StatelessWidget {
                 ),
               ),
               SizedBox.square(dimension: constraints.maxWidth * .010),
-              // Metadata and actions container
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -699,7 +581,6 @@ class ExpandedScreen extends StatelessWidget {
                     children: [
                       RemoveImageButton(onPressed: onRemoveImage),
                       const SizedBox.square(dimension: 8),
-                      // The chat button also serves as the anchor for the chat popup.
                       TellMeMoreButton(onPressed: () => showChat()),
                       ChatPopUp(
                         opController: _aiChatController,
@@ -715,11 +596,9 @@ class ExpandedScreen extends StatelessWidget {
       },
     );
 
-    // Add keyboard shortcuts if the policy allows.
     if (Policy.shouldHaveKeyboardShortcuts) {
       content = ShortcutHelper(
         bindings: <ShortcutActivator, VoidCallback>{
-          // Ctrl+T to toggle chat.
           const SingleActivator(control: true, LogicalKeyboardKey.keyT): () {
             showChat();
           },
@@ -731,7 +610,7 @@ class ExpandedScreen extends StatelessWidget {
   }
 }
 
-/// A button to remove the currently displayed image.
+/// Button to remove current image.
 class RemoveImageButton extends StatelessWidget {
   const RemoveImageButton({required this.onPressed, super.key});
 
@@ -756,7 +635,7 @@ class RemoveImageButton extends StatelessWidget {
   }
 }
 
-/// A button that navigates to or opens the chat interface.
+/// Button to navigate to/open chat interface.
 class TellMeMoreButton extends StatelessWidget {
   const TellMeMoreButton({required this.onPressed, super.key});
 
@@ -780,9 +659,7 @@ class TellMeMoreButton extends StatelessWidget {
   }
 }
 
-/// A widget that displays the chat interface within an [OverlayPortal].
-///
-/// This is used in the expanded layout to show the chat as a floating panel.
+/// Chat interface displayed in an OverlayPortal (for expanded layout).
 class ChatPopUp extends StatelessWidget {
   const ChatPopUp({
     required this.opController,
@@ -800,7 +677,6 @@ class ChatPopUp extends StatelessWidget {
       overlayChildBuilder: (BuildContext context) {
         var width = MediaQuery.sizeOf(context).width;
         var height = MediaQuery.sizeOf(context).height;
-        // Position the chat window at the bottom-right of the screen.
         return Positioned(
           right: width * .05,
           bottom: 0,
@@ -815,7 +691,6 @@ class ChatPopUp extends StatelessWidget {
             ),
             width: width * .28,
             height: height * .5,
-            // The ChatPage widget handles the actual chat logic.
             child: ChatPage(onExit: onToggleChat),
           ),
         );

@@ -1,4 +1,4 @@
-// test/state/app_state_test.dart
+/// Tests for [AppState] and [ThemeNotifier] state management.
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';

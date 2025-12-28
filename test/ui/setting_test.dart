@@ -1,4 +1,4 @@
-// test/ui/settings_test.dart
+/// Tests for [SettingsScreen] theme toggle.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/ui/screens/settings.dart';
@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:app/functionality/state.dart';
 
 void main() {
-  testWidgets('Toggle dark mode aggiorna ThemeNotifier', (tester) async {
+  testWidgets('Dark mode toggle updates ThemeNotifier', (tester) async {
     final themeNotifier = ThemeNotifier();
 
     await tester.pumpWidget(
