@@ -1,6 +1,6 @@
 # Livingdex
 
-> 🇮🇹 **[Leggi in Italiano](README.it.md)**
+> 🇮🇹 **[Read it in Italian](README.it.md)**
 
 Livingdex is a Flutter application that uses **Gemini 2.0 Flash** to simulate a real-life Pokédex, dedicated to identifying plants and animals.
 
